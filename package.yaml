@@ -1,0 +1,22 @@
+name:                flipstone-prelude
+version:             0.1.0.0
+github:              "flipstone/flipstone-prelude"
+license:             MIT
+author:              "Flipstone Technology Partners"
+maintainer:          "github@flipstone.com"
+copyright:           "2021 Flipstone Technology Partners"
+
+extra-source-files:
+- README.md
+- ChangeLog.md
+
+default-extensions:
+  - NoImplicitPrelude
+
+description:         Please see the README on GitHub at <https://github.com/flipstone/flipstone-prelude#readme>
+
+dependencies:
+- base >= 4.7 && < 5
+
+library:
+  source-dirs: src
