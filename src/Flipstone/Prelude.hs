@@ -36,6 +36,10 @@ module Flipstone.Prelude
  -- Either and related
  , Either(Left, Right)
  , either
+ , lefts
+ , rights
+ , isLeft
+ , isRight
 
  -- IO and related
  , IO
@@ -59,6 +63,7 @@ module Flipstone.Prelude
  , join
  , void
  , when
+ , (<$>)
 
  -- Fold and traversal typeclasses and functions
  , Traversable(traverse, sequenceA)
@@ -107,7 +112,7 @@ import Control.Monad ( join, Monad((>>), (>>=)), MonadFail(fail), when)
 import Control.Monad.IO.Class ( MonadIO, liftIO )
 import Data.Bool (Bool(True, False), (&&), (||), not, otherwise)
 import Data.Char (Char)
-import Data.Either ( Either(Left, Right), either )
+import Data.Either ( Either(Left, Right), either, lefts, rights, isLeft, isRight )
 import Data.Eq ( Eq((==), (/=)) )
 import Data.Foldable ( Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product) -- 'foldl' considered dangerous, use 'foldl\'' instead.
                      , and
@@ -124,7 +129,7 @@ import Data.Foldable ( Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', 
                      , find
                      )
 import Data.Function (id, const, (.), flip, ($))
-import Data.Functor (Functor(fmap, (<$)), void)
+import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)
 import Data.Maybe ( Maybe(Just, Nothing), maybe )
 import Data.Monoid ( Monoid(mconcat, mempty) )
