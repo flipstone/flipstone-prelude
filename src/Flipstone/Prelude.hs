@@ -1,9 +1,18 @@
 module Flipstone.Prelude
  (
- -- Concrete types
-   Bool(..)
- , Ordering(..)
+ -- Concrete types and related functions
+   Bool(True, False)
+ , (&&)
+ , (||)
+ , not
+ , otherwise
+
+ , Ordering(LT, EQ, GT)
+
+ -- Character types
  , Char
+
+ -- Numeric types
  , Int
  , Integer
  , Rational
@@ -12,40 +21,40 @@ module Flipstone.Prelude
  , Int32
  , Int64
  , Ratio
+ , Word
  , Word8
  , Word16
  , Word32
  , Word64
 
  -- Parameterized types
+
  -- Maybe and related functions
- , Maybe(..)
+ , Maybe(Just, Nothing)
  , maybe
+
  -- Either and related
- , Either(..)
+ , Either(Left, Right)
  , either
 
  -- IO and related
  , IO
  , liftIO
+ , MonadIO
 
  -- Typeclasses
 
  -- Comparison typeclasses and functions
- , Eq(..)
- , Ord(..)
+ , Eq((==), (/=))
+ , Ord(compare, (<), (<=), (>), (>=), max, min)
 
  -- Monad related-ish classes and functions
- , Functor(..)
- , Applicative(..)
- , Semigroup(..)
+ , Functor(fmap, (<$))
+ , Applicative(pure, (<*>), liftA2, (*>), (<*))
+ , Semigroup((<>), sconcat, stimes)
  , Monoid(mempty, mconcat) -- `mappend` is redundant and not part of the minimal complete definition
  , Monad((>>=), (>>)) -- `return` is redundant and not part of the minimal complete definition
- , MonadFail(..)
- , Arrow(..)
- , MonadPlus(..)
- , Alternative(..)
- , liftA
+ , MonadFail(fail)
  , liftA3
  , guard
  , join
@@ -53,10 +62,9 @@ module Flipstone.Prelude
  , when
 
  -- Fold and traversal typeclasses and functions
- , Traversable(..)
- , Foldable(foldMap, foldr, foldr1, elem, maximum, sum, product)
- , null
- , length
+ , Traversable(traverse, sequenceA)
+ , Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product)
+ -- ^ `foldl` is considered dangerous, also omitted are the functions which will throw, `foldr1` and `foldl1`
  , and
  , or
  , any
@@ -64,20 +72,24 @@ module Flipstone.Prelude
  , concat
  , concatMap
  , asum
- , foldl'
  , sequenceA_
  , traverse_
+ , maximumBy
+ , minimumBy
+ , find
 
  -- Enumeration typeclasses
- , Enum(..)
- , Bounded(..)
+ , Enum(succ, pred, toEnum, fromEnum, enumFrom, enumFromThen, enumFromTo, enumFromThenTo)
+ , Bounded(minBound, maxBound)
+ , boundedEnumFrom
+ , boundedEnumFromThen
 
  -- Numeric Typeclasses and functions
- , Num(..)
- , Real(..)
- , Integral(..)
- , Fractional(..)
- , RealFrac(..)
+ , Num((+), (-), (*), negate, abs, signum, fromInteger)
+ , Real(toRational)
+ , Integral(quot, rem, div, mod, quotRem, divMod, toInteger)
+ , Fractional((/), recip, fromRational)
+ , RealFrac(properFraction, truncate, round, ceiling, floor)
  , subtract
  , even
  , odd
@@ -85,58 +97,62 @@ module Flipstone.Prelude
  , lcm
  , fromIntegral
  , realToFrac
+
+ -- Function combinators
+ , id
+ , const
+ , (.)
+ , flip
+ , ($)
+
  ) where
 
-import Prelude ( Bool(..)
-               , Ordering(..)
-               , Char
-               , Int
-               , Integer
-               , Rational
-               , Maybe(..)
-               , maybe
-               , Either(..)
-               , either
-               , IO
-               , Eq(..)
-               , Ord(..)
-               , Semigroup(..)
-               , Monoid(mempty, mconcat) -- | `mappend` is redundant and not part of the minimal complete definition
-               , Functor(..)
-               , Applicative(..)
-               , Monad(..)
-               , MonadFail(..)
-               , Traversable(..)
-               , Foldable(foldMap, foldr, foldr1, elem, maximum, sum, product) -- | 'foldl' considered dangerous, use 'foldl\'' instead.
-               , null
-               , length
-               , and
-               , or
-               , any
-               , all
-               , concat
-               , concatMap
-               , Enum(..)
-               , Bounded(..)
-               , Num(..)
-               , Real(..)
-               , Integral(..)
-               , Fractional(..)
-               , RealFrac(..)
-               , subtract
-               , even
-               , odd
-               , gcd
-               , lcm
-               , fromIntegral
-               , realToFrac
-               )
-
-import Control.Applicative (Alternative(..), liftA, liftA3)
-import Control.Arrow (Arrow(..))
-import Control.Monad (MonadPlus(..), guard, join, void, when)
-import Control.Monad.IO.Class (liftIO)
-import Data.Foldable (asum, foldl', sequenceA_, traverse_)
-import Data.Int (Int8, Int16, Int32, Int64)
-import Data.Ratio (Ratio)
-import Data.Word (Word8, Word16, Word32, Word64)
+import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
+import Control.Monad ( guard, join, Monad((>>), (>>=)), MonadFail(fail), when)
+import Control.Monad.IO.Class ( MonadIO, liftIO )
+import Data.Bool (Bool(True, False), (&&), (||), not, otherwise)
+import Data.Char (Char)
+import Data.Either ( Either(Left, Right), either )
+import Data.Eq ( Eq((==), (/=)) )
+import Data.Foldable ( Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product) -- 'foldl' considered dangerous, use 'foldl\'' instead.
+                     , and
+                     , or
+                     , any
+                     , all
+                     , concat
+                     , concatMap
+                     , asum
+                     , sequenceA_
+                     , traverse_
+                     , maximumBy
+                     , minimumBy
+                     , find
+                     )
+import Data.Function (id, const, (.), flip, ($))
+import Data.Functor (Functor(fmap, (<$)), void)
+import Data.Int (Int, Int8, Int16, Int32, Int64)
+import Data.Maybe ( Maybe(Just, Nothing), maybe )
+import Data.Monoid ( Monoid(mconcat, mempty) )
+import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
+import Data.Ratio ( Ratio, Rational )
+import Data.Semigroup ( Semigroup((<>), sconcat, stimes))
+import Data.Traversable ( Traversable(traverse, sequenceA) )
+import Data.Word ( Word, Word8, Word16, Word32, Word64 )
+import GHC.Enum ( Bounded(minBound, maxBound)
+                , Enum(succ, pred, toEnum, fromEnum, enumFrom, enumFromThen, enumFromTo, enumFromThenTo)
+                , boundedEnumFrom
+                , boundedEnumFromThen
+                )
+import GHC.IO ( IO )
+import GHC.Num ( Num((+), (-), (*), negate, abs, signum, fromInteger), Integer, subtract )
+import GHC.Real
+    ( fromIntegral,
+      realToFrac,
+      Fractional((/), recip, fromRational),
+      Integral(quot, rem, div, mod, quotRem, divMod, toInteger),
+      Real(toRational),
+      RealFrac(properFraction, truncate, round, ceiling, floor),
+      even,
+      gcd,
+      lcm,
+      odd )
