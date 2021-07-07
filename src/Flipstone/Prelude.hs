@@ -56,7 +56,6 @@ module Flipstone.Prelude
  , Monad((>>=), (>>)) -- `return` is redundant and not part of the minimal complete definition
  , MonadFail(fail)
  , liftA3
- , guard
  , join
  , void
  , when
@@ -91,10 +90,6 @@ module Flipstone.Prelude
  , Fractional((/), recip, fromRational)
  , RealFrac(properFraction, truncate, round, ceiling, floor)
  , subtract
- , even
- , odd
- , gcd
- , lcm
  , fromIntegral
  , realToFrac
 
@@ -108,7 +103,7 @@ module Flipstone.Prelude
  ) where
 
 import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
-import Control.Monad ( guard, join, Monad((>>), (>>=)), MonadFail(fail), when)
+import Control.Monad ( join, Monad((>>), (>>=)), MonadFail(fail), when)
 import Control.Monad.IO.Class ( MonadIO, liftIO )
 import Data.Bool (Bool(True, False), (&&), (||), not, otherwise)
 import Data.Char (Char)
@@ -145,14 +140,10 @@ import GHC.Enum ( Bounded(minBound, maxBound)
                 )
 import GHC.IO ( IO )
 import GHC.Num ( Num((+), (-), (*), negate, abs, signum, fromInteger), Integer, subtract )
-import GHC.Real
-    ( fromIntegral,
-      realToFrac,
-      Fractional((/), recip, fromRational),
-      Integral(quot, rem, div, mod, quotRem, divMod, toInteger),
-      Real(toRational),
-      RealFrac(properFraction, truncate, round, ceiling, floor),
-      even,
-      gcd,
-      lcm,
-      odd )
+import GHC.Real( fromIntegral
+               , realToFrac
+               , Fractional((/), recip, fromRational)
+               , Integral(quot, rem, div, mod, quotRem, divMod, toInteger)
+               , Real(toRational)
+               , RealFrac(properFraction, truncate, round, ceiling, floor)
+               )
