@@ -11,6 +11,7 @@ module Flipstone.Prelude
 
  -- Character types
  , Char
+ , String
 
  -- Numeric types
  , Int
@@ -29,6 +30,11 @@ module Flipstone.Prelude
 
  -- Parameterized types
 
+ -- Types that we only re-export the Type not associated functions
+ , Set
+ , NonEmpty
+ , Text
+
  -- Maybe and related functions
  , Maybe(Just, Nothing)
  , maybe
@@ -40,6 +46,11 @@ module Flipstone.Prelude
  , rights
  , isLeft
  , isRight
+ , fromLeft
+ , fromRight
+ , mapBoth
+ , mapLeft
+ , mapRight
 
  -- IO and related
  , IO
@@ -59,11 +70,13 @@ module Flipstone.Prelude
  , Monoid(mempty, mconcat) -- `mappend` is redundant and not part of the minimal complete definition
  , Monad((>>=), (>>)) -- `return` is redundant and not part of the minimal complete definition
  , MonadFail(fail)
+ , ffmap
  , liftA3
  , join
  , void
  , when
  , (<$>)
+ , (=<<)
 
  -- Fold and traversal typeclasses and functions
  , Traversable(traverse, sequenceA)
@@ -98,6 +111,8 @@ module Flipstone.Prelude
  , fromIntegral
  , realToFrac
 
+ , IsString (fromString)
+
  -- Function combinators
  , id
  , const
@@ -105,14 +120,23 @@ module Flipstone.Prelude
  , flip
  , ($)
 
+-- Errors and Debugging
+ , trace
+ , traceIO
+ , traceShowM
+ , traceShowId
+ , traceStack
+ , undefined
+
  ) where
 
 import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
-import Control.Monad ( join, Monad((>>), (>>=)), MonadFail(fail), when)
+import Control.Monad ( join, Monad((>>), (>>=)), MonadFail(fail), when, (=<<))
 import Control.Monad.IO.Class ( MonadIO, liftIO )
 import Data.Bool (Bool(True, False), (&&), (||), not, otherwise)
 import Data.Char (Char)
 import Data.Either ( Either(Left, Right), either, lefts, rights, isLeft, isRight )
+import Data.Either.Combinators (fromLeft, fromRight, mapBoth, mapLeft, mapRight )
 import Data.Eq ( Eq((==), (/=)) )
 import Data.Foldable ( Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product) -- 'foldl' considered dangerous, use 'foldl\'' instead.
                      , and
@@ -133,16 +157,22 @@ import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)
 import Data.Maybe ( Maybe(Just, Nothing), maybe )
 import Data.Monoid ( Monoid(mconcat, mempty) )
+import Data.NonEmpty (NonEmpty)
 import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
 import Data.Ratio ( Ratio, Rational )
 import Data.Semigroup ( Semigroup((<>), sconcat, stimes))
+import Data.Set (Set)
+import Data.String (String, IsString (fromString))
+import Data.Text (Text)
 import Data.Traversable ( Traversable(traverse, sequenceA) )
 import Data.Word ( Word, Word8, Word16, Word32, Word64 )
+import Debug.Trace (trace, traceIO, traceShowId, traceShowM, traceStack)
 import GHC.Enum ( Bounded(minBound, maxBound)
                 , Enum(succ, pred, toEnum, fromEnum, enumFrom, enumFromThen, enumFromTo, enumFromThenTo)
                 , boundedEnumFrom
                 , boundedEnumFromThen
                 )
+import GHC.Err (undefined)
 import GHC.IO ( IO )
 import GHC.Num ( Num((+), (-), (*), negate, abs, signum, fromInteger), Integer, subtract )
 import GHC.Real( fromIntegral
@@ -152,3 +182,9 @@ import GHC.Real( fromIntegral
                , Real(toRational)
                , RealFrac(properFraction, truncate, round, ceiling, floor)
                )
+
+ffmap :: (Functor f, Functor g)
+      => (a -> b)
+      -> f (g a)
+      -> f (g b)
+ffmap = fmap . fmap

@@ -1,8 +1,10 @@
 cabal-version: 1.12
 
--- This file has been generated from package.yaml by hpack version 0.34.4.
+-- This file has been generated from package.yaml by hpack version 0.33.0.
 --
 -- see: https://github.com/sol/hpack
+--
+-- hash: 5c5e3f9340e425724ef97c2ca24bfa46cf645c37aa2f57358d1e51e67a18c96e
 
 name:           flipstone-prelude
 version:        0.1.0.0
@@ -30,8 +32,10 @@ library
       Paths_flipstone_prelude
   hs-source-dirs:
       src
-  default-extensions:
-      NoImplicitPrelude
+  default-extensions: NoImplicitPrelude
   build-depends:
       base >=4.7 && <5
+    , containers
+    , either
+    , text
   default-language: Haskell2010
