@@ -1,3 +1,4 @@
+{-# LANGUAGE CPP #-}
 module Flipstone.Prelude
  (
  -- Concrete types and related functions
@@ -69,7 +70,11 @@ module Flipstone.Prelude
  , Semigroup((<>), sconcat, stimes)
  , Monoid(mempty, mconcat) -- `mappend` is redundant and not part of the minimal complete definition
  , Monad((>>=), (>>)) -- `return` is redundant and not part of the minimal complete definition
+#if !MIN_VERSION_base(4,13,0)
  , MonadFail(fail)
+#else
+ , fail
+#endif
  , ffmap
  , liftA3
  , join
@@ -80,7 +85,11 @@ module Flipstone.Prelude
 
  -- Fold and traversal typeclasses and functions
  , Traversable(traverse, sequenceA)
+#if !MIN_VERSION_base(4,13,0)
  , Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product)
+#else
+ , fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product
+#endif
  -- ^ `foldl` is considered dangerous, also omitted are the functions which will throw, `foldr1` and `foldl1`
  , and
  , or
@@ -131,14 +140,24 @@ module Flipstone.Prelude
  ) where
 
 import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
+
+#if !MIN_VERSION_base(4,13,0)
 import Control.Monad ( join, Monad((>>), (>>=)), MonadFail(fail), when, (=<<))
+#else
+import Control.Monad ( join, Monad((>>), (>>=)), when, (=<<))
+#endif
 import Control.Monad.IO.Class ( MonadIO, liftIO )
 import Data.Bool (Bool(True, False), (&&), (||), not, otherwise)
 import Data.Char (Char)
 import Data.Either ( Either(Left, Right), either, lefts, rights, isLeft, isRight )
 import Data.Either.Combinators (fromLeft, fromRight, mapBoth, mapLeft, mapRight )
 import Data.Eq ( Eq((==), (/=)) )
-import Data.Foldable ( Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product) -- 'foldl' considered dangerous, use 'foldl\'' instead.
+import Data.Foldable (
+#if !MIN_VERSION_base(4,13,0)
+Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product) -- 'foldl' considered dangerous, use 'foldl\'' instead.
+#else
+fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product -- 'foldl' considered dangerous, use 'foldl\'' instead.
+#endif
                      , and
                      , or
                      , any
