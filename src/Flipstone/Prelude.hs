@@ -81,11 +81,12 @@ module Flipstone.Prelude
 
  -- Fold and traversal typeclasses and functions
  , Traversable(traverse, sequenceA)
+ , Foldable(
 #if MIN_VERSION_base(4,13,0)
- , Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product)
-#else
- , Foldable(fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product)
+   foldMap',
 #endif
+   fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product
+ )
  -- ^ `foldl` is considered dangerous, also omitted are the functions which will throw, `foldr1` and `foldl1`
  , and
  , or
