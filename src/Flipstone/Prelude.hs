@@ -146,11 +146,12 @@ import Data.Char (Char)
 import Data.Either ( Either(Left, Right), either, lefts, rights, isLeft, isRight )
 import Data.Either.Combinators (fromLeft, fromRight, mapBoth, mapLeft, mapRight )
 import Data.Eq ( Eq((==), (/=)) )
+import Data.Foldable ( Foldable(
 #if MIN_VERSION_base(4,13,0)
-import Data.Foldable ( Foldable(fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product) -- 'foldl' considered dangerous, use 'foldl\'' instead.
-#else
-import Data.Foldable ( Foldable(fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product) -- 'foldl' considered dangerous, use 'foldl\'' instead.
+                                 foldMap',
 #endif
+                                 fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product
+                               )
                      , and
                      , or
                      , any
