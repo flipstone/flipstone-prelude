@@ -179,13 +179,12 @@ import Data.String (String, IsString (fromString))
 import Data.Text (Text)
 import Data.Traversable ( Traversable(traverse, sequenceA) )
 import Data.Word ( Word, Word8, Word16, Word32, Word64 )
-import Debug.Trace (trace, traceIO, traceShowId, traceShowM, traceStack)
+import Flipstone.Debug ( trace , traceIO , traceShowId , traceShowM , traceStack , undefined)
 import GHC.Enum ( Bounded(minBound, maxBound)
                 , Enum(succ, pred, toEnum, fromEnum, enumFrom, enumFromThen, enumFromTo, enumFromThenTo)
                 , boundedEnumFrom
                 , boundedEnumFromThen
                 )
-import GHC.Err (undefined)
 import GHC.IO ( IO )
 import GHC.Num ( Num((+), (-), (*), negate, abs, signum, fromInteger), Integer, subtract )
 import GHC.Real( fromIntegral
