@@ -11,6 +11,7 @@ extra-source-files:
   - ChangeLog.md
 
 default-extensions:
+  - CPP
   - NoImplicitPrelude
 
 description:         Please see the README on GitHub at <https://github.com/flipstone/flipstone-prelude#readme>
@@ -20,6 +21,7 @@ dependencies:
   - containers
   - either
   - text
+  - type-errors
 
 library:
   source-dirs: src

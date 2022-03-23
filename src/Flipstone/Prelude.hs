@@ -1,4 +1,3 @@
-{-# LANGUAGE CPP #-}
 module Flipstone.Prelude
  (
  -- Concrete types and related functions

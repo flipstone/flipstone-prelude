@@ -1,4 +1,10 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE MonoLocalBinds #-}
+{-# LANGUAGE TypeOperators #-}
+{-# LANGUAGE UndecidableInstances #-}
 module Flipstone.Debug
   ( trace
   , traceIO
@@ -18,30 +24,35 @@ import GHC.Err (undefined)
 #else
 -- This exposes bunk versions of the debug functions that will always fail to
 -- compile when used.
+import Data.Kind (Constraint, Type)
 import qualified GHC.Err as Err
+import Type.Errors (TypeError, ErrorMessage(Text, (:$$:), (:<>:)))
 
-data DevFlagNotSet
+class DevFlagNotSetError (msg :: ErrorMessage)
+instance TypeError msg => DevFlagNotSetError msg
 
-{-# WARNING trace, traceIO, traceShowId, traceShowM, traceStack, undefined
-    "Debug functions may only be used in development."
-  #-}
+type DevFlagNotSetMessage =
+  'Text "Debugging functions are only permitted in development "         ':$$:
+  'Text "environments. In order to use this function, you must set the " ':$$:
+  'Text "DEV flag when loading the REPL. This flag must never be used "  ':$$:
+  'Text "in any live environment. "
 
-trace :: DevFlagNotSet
-trace = Err.undefined
+trace :: DevFlagNotSetError DevFlagNotSetMessage => a
+trace = Err.error "unreachable"
 
-traceIO :: DevFlagNotSet
-traceIO = Err.undefined
+traceIO :: DevFlagNotSetError DevFlagNotSetMessage => a
+traceIO = Err.error "unreachable"
 
-traceShowId :: DevFlagNotSet
-traceShowId = Err.undefined
+traceShowId :: DevFlagNotSetError DevFlagNotSetMessage => a
+traceShowId = Err.error "unreachable"
 
-traceShowM :: DevFlagNotSet
-traceShowM = Err.undefined
+traceShowM :: DevFlagNotSetError DevFlagNotSetMessage => a
+traceShowM = Err.error "unreachable"
 
-traceStack :: DevFlagNotSet
-traceStack = Err.undefined
+traceStack :: DevFlagNotSetError DevFlagNotSetMessage => a
+traceStack = Err.error "unreachable"
 
-undefined :: DevFlagNotSet
-undefined = Err.undefined
+undefined :: DevFlagNotSetError DevFlagNotSetMessage => a
+undefined = Err.error "unreachable"
 
 #endif
