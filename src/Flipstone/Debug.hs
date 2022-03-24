@@ -14,10 +14,10 @@ module Flipstone.Debug
   , undefined
   ) where
 
-#ifdef DEV
+#ifdef DEBUG
 -- This exposes the true versions of the debug functions for use in development
--- environments. They will only compile if there is a `-DDEV` compiler flag
--- present.
+-- environments. They will only compile if there is a `-DDEBUG` compiler flag
+-- present. To set this, run with the command `--flag flipstone-prelude:debug`.
 import Debug.Trace (trace, traceIO, traceShowId, traceShowM, traceStack)
 import GHC.Err (undefined)
 
@@ -32,10 +32,11 @@ class DevFlagNotSetError (msg :: ErrorMessage)
 instance TypeError msg => DevFlagNotSetError msg
 
 type DevFlagNotSetMessage =
-  'Text "Debugging functions are only permitted in development "         ':$$:
-  'Text "environments. In order to use this function, you must set the " ':$$:
-  'Text "DEV flag when loading the REPL. This flag must never be used "  ':$$:
-  'Text "in any live environment. "
+  'Text "Debugging functions are only permitted in development"         ':$$:
+  'Text "environments. In order to use this function, you must set the" ':$$:
+  'Text "DEBUG flag when loading the REPL. You can set this by running" ':$$:
+  'Text "with the command `--flag flipstone-prelude:debug`. This flag"  ':$$:
+  'Text "must never be used in any live environment."
 
 trace :: DevFlagNotSetError DevFlagNotSetMessage => a
 trace = Err.error "unreachable"

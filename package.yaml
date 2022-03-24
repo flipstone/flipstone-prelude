@@ -23,5 +23,14 @@ dependencies:
   - text
   - type-errors
 
+flags:
+  debug:
+    description: Exposes debugging functions for use in development environments.
+    manual: true
+    default: false
+
 library:
   source-dirs: src
+  when:
+    - condition: flag(debug)
+      cpp-options: -DDEBUG

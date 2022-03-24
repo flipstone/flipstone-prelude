@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 587cb573f80a444d3f50aa820ffdfdca15932c203b0169e211aef6fd65648f92
+-- hash: 0144d5125fd286e747528ceb47a26c122dcdd4c5f3d40305fb3c2b1d7b138b82
 
 name:           flipstone-prelude
 version:        0.1.0.0
@@ -25,6 +25,11 @@ source-repository head
   type: git
   location: https://github.com/flipstone/flipstone-prelude
 
+flag debug
+  description: _
+  manual: True
+  default: False
+
 library
   exposed-modules:
       Flipstone.Debug
@@ -42,4 +47,6 @@ library
     , either
     , text
     , type-errors
+  if flag(debug)
+    cpp-options: -DDEBUG
   default-language: Haskell2010
