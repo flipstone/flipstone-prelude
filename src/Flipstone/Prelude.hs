@@ -30,11 +30,6 @@ module Flipstone.Prelude
 
  -- Parameterized types
 
- -- Types that we only re-export the Type not associated functions
- , Set
- , NonEmpty
- , Text
-
  -- Maybe and related functions
  , Maybe(Just, Nothing)
  , maybe
@@ -169,13 +164,10 @@ import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)
 import Data.Maybe ( Maybe(Just, Nothing), maybe )
 import Data.Monoid ( Monoid(mconcat, mempty) )
-import Data.List.NonEmpty (NonEmpty)
 import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
 import Data.Ratio ( Ratio, Rational )
 import Data.Semigroup ( Semigroup((<>), sconcat, stimes))
-import Data.Set (Set)
 import Data.String (String, IsString (fromString))
-import Data.Text (Text)
 import Data.Traversable ( Traversable(traverse, sequenceA) )
 import Data.Word ( Word, Word8, Word16, Word32, Word64 )
 import Flipstone.Debug ( trace , traceIO , traceShowId , traceShowM , traceStack , undefined)
