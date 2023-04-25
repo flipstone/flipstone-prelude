@@ -28,7 +28,8 @@ module Flipstone.Prelude
  , Word32
  , Word64
 
- -- Parameterized types
+ -- Types that we only re-export the Type not associated functions
+ , NonEmpty
 
  -- Maybe and related functions
  , Maybe(Just, Nothing)
@@ -164,6 +165,7 @@ import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)
 import Data.Maybe ( Maybe(Just, Nothing), maybe )
 import Data.Monoid ( Monoid(mconcat, mempty) )
+import Data.List.NonEmpty (NonEmpty)
 import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
 import Data.Ratio ( Ratio, Rational )
 import Data.Semigroup ( Semigroup((<>), sconcat, stimes))
