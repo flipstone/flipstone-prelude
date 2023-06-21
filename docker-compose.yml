@@ -1,7 +1,6 @@
-version: "3"
 services:
   flipstone-prelude:
-    image: flipstone/stack:v4-2.7.1
+    image: ghcr.io/flipstone/haskell-tools:debian-unstable-ghc-9.2.7-2023-06-21-4bf5abf
     volumes:
       - .:/flipstone-prelude
     working_dir: /flipstone-prelude
