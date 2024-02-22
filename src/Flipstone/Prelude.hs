@@ -127,6 +127,12 @@ module Flipstone.Prelude
  , traceStack
  , undefined
 
+-- Tuples
+ , curry
+ , fst
+ , snd
+ , swap
+ , uncurry
  ) where
 
 import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
@@ -169,6 +175,7 @@ import Data.Ratio ( Ratio, Rational )
 import Data.Semigroup ( Semigroup((<>), sconcat, stimes))
 import Data.String ( String )
 import Data.Traversable ( Traversable(traverse, sequenceA) )
+import Data.Tuple (curry, fst, snd, swap, uncurry)
 import Data.Word ( Word, Word8, Word16, Word32, Word64 )
 import Flipstone.Debug ( trace , traceIO , traceShowId , traceShowM , traceStack , undefined)
 import GHC.Enum ( Bounded(minBound, maxBound)
