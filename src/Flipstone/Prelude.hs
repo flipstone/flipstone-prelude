@@ -112,8 +112,6 @@ module Flipstone.Prelude
  , fromIntegral
  , realToFrac
 
- , IsString (fromString)
-
  -- Function combinators
  , id
  , const
@@ -169,7 +167,7 @@ import Data.List.NonEmpty (NonEmpty)
 import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
 import Data.Ratio ( Ratio, Rational )
 import Data.Semigroup ( Semigroup((<>), sconcat, stimes))
-import Data.String (String, IsString (fromString))
+import Data.String ( String )
 import Data.Traversable ( Traversable(traverse, sequenceA) )
 import Data.Word ( Word, Word8, Word16, Word32, Word64 )
 import Flipstone.Debug ( trace , traceIO , traceShowId , traceShowM , traceStack , undefined)
