@@ -80,7 +80,7 @@ module Flipstone.Prelude
 #if MIN_VERSION_base(4,13,0)
    foldMap',
 #endif
-   fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product
+   fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, sum, product
  )
  -- ^ `foldl` is considered dangerous, also omitted are the functions which will throw, `foldr1` and `foldl1`
  , and
@@ -92,8 +92,6 @@ module Flipstone.Prelude
  , asum
  , sequenceA_
  , traverse_
- , maximumBy
- , minimumBy
  , find
 
  -- Enumeration typeclasses
@@ -133,6 +131,33 @@ module Flipstone.Prelude
  , snd
  , swap
  , uncurry
+
+-- Foldable1
+ , Foldable1
+    ( fold1
+    , foldMap1
+    , foldMap1'
+    , toNonEmpty
+    , maximum
+    , minimum
+    , head
+    , last
+    , foldrMap1
+    , foldlMap1'
+    --, foldlMap1
+    , foldrMap1'
+    )
+ , foldr1
+ , foldr1'
+ --, foldl1
+ , foldl1'
+ , intercalate1
+ , foldrM1
+ , foldlM1
+ , foldrMapM1
+ , foldlMapM1
+ , maximumBy
+ , minimumBy
  ) where
 
 import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
@@ -160,10 +185,35 @@ import Data.Foldable ( Foldable(
                      , asum
                      , sequenceA_
                      , traverse_
-                     , maximumBy
-                     , minimumBy
                      , find
                      )
+import Data.Foldable1
+  ( Foldable1
+    (fold1
+    , foldMap1
+    , foldMap1'
+    , toNonEmpty
+    , maximum
+    , minimum
+    , head
+    , last
+    , foldrMap1
+    , foldlMap1'
+    --, foldlMap1
+    , foldrMap1'
+    )
+  , foldr1
+  , foldr1'
+  --, foldl1
+  , foldl1'
+  , intercalate1
+  , foldrM1
+  , foldlM1
+  , foldrMapM1
+  , foldlMapM1
+  , maximumBy
+  , minimumBy
+  )
 import Data.Function (id, const, (.), flip, ($))
 import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)

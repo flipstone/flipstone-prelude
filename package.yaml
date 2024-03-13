@@ -21,6 +21,10 @@ dependencies:
   - either
   - type-errors
 
+when:
+  condition: impl(ghc < 9.6.1)
+  dependencies: foldable1-classes-compat
+
 flags:
   debug:
     description: Exposes debugging functions for use in development environments.
