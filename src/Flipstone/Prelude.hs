@@ -1,3 +1,4 @@
+{-# LANGUAGE ScopedTypeVariables #-}
 module Flipstone.Prelude
  (
  -- Concrete types and related functions
@@ -158,6 +159,8 @@ module Flipstone.Prelude
  , foldlMapM1
  , maximumBy
  , minimumBy
+ , foldMapA
+ , foldMapA1
  ) where
 
 import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
@@ -214,11 +217,16 @@ import Data.Foldable1
   , maximumBy
   , minimumBy
   )
+
+import Data.Coerce (coerce)
 import Data.Function (id, const, (.), flip, ($))
 import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)
 import Data.Maybe ( Maybe(Just, Nothing), maybe )
 import Data.Monoid ( Monoid(mconcat, mempty) )
+#if MIN_VERSION_base(4,12,0)
+import Data.Monoid (Ap(..))
+#endif
 import Data.List.NonEmpty (NonEmpty)
 import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
 import Data.Ratio ( Ratio, Rational )
@@ -248,3 +256,17 @@ ffmap :: (Functor f, Functor g)
       -> f (g a)
       -> f (g b)
 ffmap = fmap . fmap
+
+foldMapA :: forall f t a b. (Monoid b, Applicative f, Foldable t) => (a -> f b) -> t a -> f b
+#if MIN_VERSION_base(4,12,0)
+foldMapA = coerce (foldMap :: (a -> Ap f b) -> t a -> Ap f b)
+#else
+foldMapA f = foldr (liftA2 (<>) . f) (pure mempty)
+#endif
+
+foldMapA1 :: forall f t a b. (Semigroup b, Applicative f, Foldable1 t) => (a -> f b) -> t a -> f b
+#if MIN_VERSION_base(4,12,0)
+foldMapA1 = coerce (foldMap1 :: (a -> Ap f b) -> t a -> Ap f b)
+#else
+foldMapA1 f = foldrMap1 f (liftA2 (<>) . f)
+#endif
