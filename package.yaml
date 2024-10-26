@@ -1,5 +1,5 @@
 name:                flipstone-prelude
-version:             0.3.2.0
+version:             0.3.3.0
 github:              "flipstone/flipstone-prelude"
 license:             MIT
 author:              "Flipstone Technology Partners"
@@ -17,13 +17,9 @@ default-extensions:
 description:         Please see the README on GitHub at <https://github.com/flipstone/flipstone-prelude#readme>
 
 dependencies:
-  - base >= 4.7 && < 5
+  - base >= 4.18 && < 5
   - either
   - type-errors
-
-when:
-  condition: impl(ghc < 9.6.1)
-  dependencies: foldable1-classes-compat
 
 flags:
   debug:

@@ -78,10 +78,7 @@ module Flipstone.Prelude
  -- Fold and traversal typeclasses and functions
  , Traversable(traverse, sequenceA)
  , Foldable(
-#if MIN_VERSION_base(4,13,0)
-   foldMap',
-#endif
-   fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, sum, product
+   fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, sum, product
  )
  -- ^ `foldl` is considered dangerous, also omitted are the functions which will throw, `foldr1` and `foldl1`
  , and
@@ -174,10 +171,7 @@ import Data.Either ( Either(Left, Right), either, lefts, rights, isLeft, isRight
 import Data.Either.Combinators (fromLeft, fromRight, mapBoth, mapLeft, mapRight )
 import Data.Eq ( Eq((==), (/=)) )
 import Data.Foldable ( Foldable(
-#if MIN_VERSION_base(4,13,0)
-                                 foldMap',
-#endif
-                                 fold, foldMap, foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product
+                                 fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product
                                )
                      , and
                      , or
@@ -223,10 +217,7 @@ import Data.Function (id, const, (.), flip, ($))
 import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)
 import Data.Maybe ( Maybe(Just, Nothing), maybe )
-import Data.Monoid ( Monoid(mconcat, mempty) )
-#if MIN_VERSION_base(4,12,0)
-import Data.Monoid (Ap(..))
-#endif
+import Data.Monoid ( Ap(..), Monoid(mconcat, mempty) )
 import Data.List.NonEmpty (NonEmpty)
 import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
 import Data.Ratio ( Ratio, Rational )
@@ -258,15 +249,7 @@ ffmap :: (Functor f, Functor g)
 ffmap = fmap . fmap
 
 foldMapA :: forall f t a b. (Monoid b, Applicative f, Foldable t) => (a -> f b) -> t a -> f b
-#if MIN_VERSION_base(4,12,0)
 foldMapA = coerce (foldMap :: (a -> Ap f b) -> t a -> Ap f b)
-#else
-foldMapA f = foldr (liftA2 (<>) . f) (pure mempty)
-#endif
 
 foldMapA1 :: forall f t a b. (Semigroup b, Applicative f, Foldable1 t) => (a -> f b) -> t a -> f b
-#if MIN_VERSION_base(4,12,0)
 foldMapA1 = coerce (foldMap1 :: (a -> Ap f b) -> t a -> Ap f b)
-#else
-foldMapA1 f = foldrMap1 f (liftA2 (<>) . f)
-#endif
