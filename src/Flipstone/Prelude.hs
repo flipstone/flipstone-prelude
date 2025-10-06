@@ -1,4 +1,4 @@
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ExplicitNamespaces #-}
 module Flipstone.Prelude
  (
  -- Concrete types and related functions
@@ -30,13 +30,17 @@ module Flipstone.Prelude
  , Word64
 
  -- Types that we only re-export the Type not associated functions
- , NonEmpty
+ , NonEmpty((:|))
 
  -- Maybe and related functions
  , Maybe(Just, Nothing)
  , maybe
+ , fromMaybe
+ , mapMaybe
+ , isNothing
+ , isJust
 
- -- Either and related
+ -- Either and related functions
  , Either(Left, Right)
  , either
  , lefts
@@ -116,12 +120,14 @@ module Flipstone.Prelude
  , ($)
 
 -- Errors and Debugging
+ , HasCallStack
  , trace
  , traceIO
  , traceShowM
  , traceShowId
  , traceStack
  , undefined
+ , error
 
 -- Tuples
  , curry
@@ -158,6 +164,9 @@ module Flipstone.Prelude
  , minimumBy
  , foldMapA
  , foldMapA1
+
+-- Type stuff
+ , type (~)
  ) where
 
 import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3 )
@@ -165,10 +174,10 @@ import Control.Applicative( Applicative(pure, (<*>), liftA2, (*>), (<*)), liftA3
 import Control.Monad ( join, Monad((>>), (>>=)), when, (=<<))
 import Control.Monad.Fail ( MonadFail(fail) )
 import Control.Monad.IO.Class ( MonadIO, liftIO )
+import Data.Bifunctor (bimap, first, second)
 import Data.Bool (Bool(True, False), (&&), (||), not, otherwise)
 import Data.Char (Char)
-import Data.Either ( Either(Left, Right), either, lefts, rights, isLeft, isRight )
-import Data.Either.Combinators (fromLeft, fromRight, mapBoth, mapLeft, mapRight )
+import Data.Either ( Either(Left, Right), either, lefts, rights, isLeft, isRight, fromLeft, fromRight)
 import Data.Eq ( Eq((==), (/=)) )
 import Data.Foldable ( Foldable(
                                  fold, foldMap, foldMap', foldr, foldr', foldl', toList, null, length, elem, maximum, sum, product
@@ -216,17 +225,21 @@ import Data.Coerce (coerce)
 import Data.Function (id, const, (.), flip, ($))
 import Data.Functor (Functor(fmap, (<$)), (<$>), void)
 import Data.Int (Int, Int8, Int16, Int32, Int64)
-import Data.Maybe ( Maybe(Just, Nothing), maybe )
-import Data.Monoid ( Ap(..), Monoid(mconcat, mempty) )
-import Data.List.NonEmpty (NonEmpty)
+import Data.Maybe ( Maybe(Just, Nothing), maybe, fromMaybe, mapMaybe, isJust, isNothing )
+import Data.Monoid ( Monoid(mconcat, mempty) )
+import Data.List.NonEmpty (NonEmpty((:|)))
 import Data.Ord ( Ord(compare, (<), (<=), (>), (>=), max, min), Ordering(LT, EQ, GT) )
 import Data.Ratio ( Ratio, Rational )
 import Data.Semigroup ( Semigroup((<>), sconcat, stimes))
 import Data.String ( String )
 import Data.Traversable ( Traversable(traverse, sequenceA) )
 import Data.Tuple (curry, fst, snd, swap, uncurry)
+import Data.Type.Equality (type (~))
 import Data.Word ( Word, Word8, Word16, Word32, Word64 )
-import Flipstone.Debug ( trace , traceIO , traceShowId , traceShowM , traceStack , undefined)
+import Flipstone.Debug ( trace , traceIO , traceShowId , traceShowM , traceStack , undefined, error)
+import Flipstone.Extras.Either (mapBoth, mapLeft, mapRight)
+import Flipstone.Extras.Functor (ffmap)
+import Flipstone.Extras.Foldable (foldMapA, foldMapA1)
 import GHC.Enum ( Bounded(minBound, maxBound)
                 , Enum(succ, pred, toEnum, fromEnum, enumFrom, enumFromThen, enumFromTo, enumFromThenTo)
                 , boundedEnumFrom
@@ -241,15 +254,4 @@ import GHC.Real( fromIntegral
                , Real(toRational)
                , RealFrac(properFraction, truncate, round, ceiling, floor)
                )
-
-ffmap :: (Functor f, Functor g)
-      => (a -> b)
-      -> f (g a)
-      -> f (g b)
-ffmap = fmap . fmap
-
-foldMapA :: forall f t a b. (Monoid b, Applicative f, Foldable t) => (a -> f b) -> t a -> f b
-foldMapA = coerce (foldMap :: (a -> Ap f b) -> t a -> Ap f b)
-
-foldMapA1 :: forall f t a b. (Semigroup b, Applicative f, Foldable1 t) => (a -> f b) -> t a -> f b
-foldMapA1 = coerce (foldMap1 :: (a -> Ap f b) -> t a -> Ap f b)
+import GHC.Stack (HasCallStack)
