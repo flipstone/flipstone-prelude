@@ -1,6 +1,6 @@
 services:
   flipstone-prelude:
-    image: ghcr.io/flipstone/haskell-tools:debian-ghc-9.10.3-b5fe85f
+    image: ghcr.io/flipstone/haskell-tools:debian-ghc-9.10.3-1e1d10c
     volumes:
       - .:/flipstone-prelude
     working_dir: /flipstone-prelude
