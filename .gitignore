@@ -21,4 +21,5 @@ cabal.project.local
 cabal.project.local~
 .HTF/
 .ghc.environment.*
+docker-compose.override.yaml
 docker-compose.override.yml
